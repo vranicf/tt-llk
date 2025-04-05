@@ -18,16 +18,19 @@ concurrency:
 jobs:
   pre-commit:
     name: "🔍 Static checks"
+    if: github.event_name != 'pull_request' || github.event.action != 'labeled'
     uses: ./.github/workflows/pre-commit.yml
 
   build-images:
     name: "🐳️ Docker setup"
+    if: github.event_name != 'pull_request' || github.event.action != 'labeled'
     uses: ./.github/workflows/build-images.yml
     needs: pre-commit
     secrets: inherit
 
   setup-and-test-wormhole:
     name: "🧪 Perform checks (Wormhole)"
+    if: github.event_name != 'pull_request' || github.event.action != 'labeled'
     uses: ./.github/workflows/setup-and-test.yml
     needs: build-images
     with:
@@ -38,6 +41,7 @@ jobs:
   test-tt-metal:
     name: "🧩 tt-metal integration (Wormhole)"
     needs: setup-and-test-wormhole
+    if: contains(github.event.pull_request.labels.*.name, 'run-integration-tests')
     uses: ./.github/workflows/tt-metal-integration-tests.yml
     secrets: inherit
     with:
