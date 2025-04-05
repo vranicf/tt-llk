@@ -16,35 +16,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  gh-comment:
-    if: github.event_name == 'pull_request'
-    env:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      -name: Comment on PR if no labels and comment not already posted
-    run: |
-      PR_NUMBER=${{ github.event.pull_request.number }}
-      REPO=${{ github.repository }}
-      echo "Checking labels on PR #$PR_NUMBER..."
-      LABEL_COUNT=$(gh pr view "$PR_NUMBER" --repo "$REPO" --json labels --jq '.labels | length')
-      if [ "$LABEL_COUNT" -gt 0 ]; then
-        echo "Labels already present — skipping comment."
-        exit 0
-      fi
-      echo "Checking if reminder comment is already posted..."
-      gh pr view "$PR_NUMBER" --repo "$REPO" --json comments --jq '.comments[].body' \
-        | grep -Fq "Please set one of the following labels"
-      if [ $? -eq 0 ]; then
-        echo "Reminder already posted — skipping comment."
-        exit 0
-      fi
-      echo "Posting comment to PR..."
-      gh pr comment "$PR_NUMBER" --repo "$REPO" --body \
-      "Please set one of the following labels to control integration testing:
-        - \`run-integration-tests\`
-      This ensures the correct testing workflow is triggered."
 
-  # Pre-commit checks
   pre-commit:
     name: "🔍 Static checks"
     uses: ./.github/workflows/pre-commit.yml
