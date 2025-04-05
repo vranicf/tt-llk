@@ -34,7 +34,7 @@ on:
 jobs:
   test-tt-metal:
     name: 🔧 LLK unit tests
-    if: github.event_name == 'workflow_dispatch' || \
+    if: github.event_name == 'workflow_dispatch' ||
         contains(github.event.pull_request.labels.*.name, 'run-integration-tests')
     env:
       DOCKER_IMAGE: ghcr.io/tenstorrent/tt-metal/tt-metalium/ubuntu-22.04-ci-build-amd64
