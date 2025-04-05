@@ -30,7 +30,7 @@ on:
 jobs:
   test-tt-metal:
     name: 🔧 LLK unit tests
-    if: contains(github.event.pull_request.labels.*.name, 'integration-tests')
+    if: contains(github.event.pull_request.labels.*.name, 'run-integration-tests')
     env:
       DOCKER_IMAGE: ghcr.io/tenstorrent/tt-metal/tt-metalium/ubuntu-22.04-ci-build-amd64
       IMAGE_HASH: ec366e61ff1989d6650d8ee0fc636189b3c08c13
@@ -50,13 +50,32 @@ jobs:
           path: tt-metal
           submodules: recursive
 
-      - name: Checkout the current branch
+      - name: Override LLK submodule branch
         run: |
           cd tt-metal/tt_metal/third_party/tt_llk
-          git fetch origin +refs/heads/*:refs/remotes/origin/*
-          git branch -a
-          git checkout remotes/origin/${{ inputs.branch_name }}
-          cd ../../../
+
+          if [ "${{ github.event.pull_request.head.repo.full_name }}" != "${{ github.repository }}" ]; then
+            echo "PR is from a fork: ${{ github.event.pull_request.head.repo.full_name }}"
+
+            echo "Adding contributor's fork as remote..."
+            git remote add fork https://github.com/${{ github.event.pull_request.head.repo.full_name }}.git
+
+            echo "Fetching branch '${{ github.head_ref }}' from fork..."
+            git fetch fork ${{ github.head_ref }}
+
+            echo "Checking out the fork branch"
+            git checkout FETCH_HEAD
+          else
+            echo "PR is internal (same repo). Using origin to checkout submodule branch"
+
+            echo "Fetching all branches from origin..."
+            git fetch origin +refs/heads/*:refs/remotes/origin/*
+
+            echo "Checking out branch '${{ github.head_ref }}' from origin"
+            git checkout remotes/origin/${{ github.head_ref }}
+          fi
+
+          cd ../../../../
 
       - name: Log in to Docker registry
         uses: docker/login-action@v3
