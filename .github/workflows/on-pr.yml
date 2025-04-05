@@ -16,21 +16,46 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  gh-comment:
+    name: Comment on PR if no labels and comment not already posted
+    if: github.event_name == 'pull_request'
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    run: |
+      PR_NUMBER=${{ github.event.pull_request.number }}
+      REPO=${{ github.repository }}
+      echo "Checking labels on PR #$PR_NUMBER..."
+      LABEL_COUNT=$(gh pr view "$PR_NUMBER" --repo "$REPO" --json labels --jq '.labels | length')
+      if [ "$LABEL_COUNT" -gt 0 ]; then
+        echo "Labels already present — skipping comment."
+        exit 0
+      fi
+      echo "Checking if reminder comment is already posted..."
+      gh pr view "$PR_NUMBER" --repo "$REPO" --json comments --jq '.comments[].body' \
+        | grep -Fq "Please set one of the following labels"
+      if [ $? -eq 0 ]; then
+        echo "Reminder already posted — skipping comment."
+        exit 0
+      fi
+      echo "Posting comment to PR..."
+      gh pr comment "$PR_NUMBER" --repo "$REPO" --body \
+      "Please set one of the following labels to control integration testing:
+        - \`run-integration-tests\`
+      This ensures the correct testing workflow is triggered."
+
+  # Pre-commit checks
   pre-commit:
     name: "🔍 Static checks"
-    if: github.event_name != 'pull_request' || github.event.action != 'labeled'
     uses: ./.github/workflows/pre-commit.yml
 
   build-images:
     name: "🐳️ Docker setup"
-    if: github.event_name != 'pull_request' || github.event.action != 'labeled'
     uses: ./.github/workflows/build-images.yml
     needs: pre-commit
     secrets: inherit
 
   setup-and-test-wormhole:
     name: "🧪 Perform checks (Wormhole)"
-    if: github.event_name != 'pull_request' || github.event.action != 'labeled'
     uses: ./.github/workflows/setup-and-test.yml
     needs: build-images
     with:
@@ -41,7 +66,6 @@ jobs:
   test-tt-metal:
     name: "🧩 tt-metal integration (Wormhole)"
     needs: setup-and-test-wormhole
-    if: contains(github.event.pull_request.labels.*.name, 'run-integration-tests')
     uses: ./.github/workflows/tt-metal-integration-tests.yml
     secrets: inherit
     with:
