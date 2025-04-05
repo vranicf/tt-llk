@@ -60,13 +60,13 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.payload.pull_request.number,
-              body: `
-                Thank you for your contribution! 🚀
-
-                If you wish to run tt-metal integration tests, please add the \`run-integration-tests\` label
-                to this pull request.
-
-                For more details, please refer to our \
-                [CONTRIBUTING.md](https://github.com/${{ github.repository }}/blob/main/CONTRIBUTING.md).
-              `,
+              body: [
+                "Thank you for your contribution! 🚀",
+                "",
+                "If you wish to run tt-metal integration tests, please add the `run-integration-tests` label",
+                "to this pull request.",
+                "",
+                "For more details, please refer to our",
+                "[CONTRIBUTING.md](https://github.com/${context.repo.owner}/${context.repo.repo}/blob/main/CONTRIBUTING.md)."
+              ].join('\n')
             });
