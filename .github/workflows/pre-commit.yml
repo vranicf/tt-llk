@@ -63,10 +63,10 @@ jobs:
               body: `
                 Thank you for your contribution! 🚀
 
-                If you wish to run tt-metal integration tests, please add the \`run-integration-tests\` \
-                label to this pull request.
+                If you wish to run tt-metal integration tests, please add the \`run-integration-tests\` label
+                to this pull request.
 
-                For more details, please refer to our \
+                For more details, please refer to our `
                 [CONTRIBUTING.md](https://github.com/${{ github.repository }}/blob/main/CONTRIBUTING.md).
               `,
             });
