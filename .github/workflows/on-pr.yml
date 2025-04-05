@@ -17,10 +17,11 @@ concurrency:
 
 jobs:
   gh-comment:
-    name: Comment on PR if no labels and comment not already posted
     if: github.event_name == 'pull_request'
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      -name: Comment on PR if no labels and comment not already posted
     run: |
       PR_NUMBER=${{ github.event.pull_request.number }}
       REPO=${{ github.repository }}
