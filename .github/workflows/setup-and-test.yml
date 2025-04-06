@@ -38,7 +38,7 @@ jobs:
       - name: Run tests
         shell: bash
         run: |
-          cd python_tests/
+          cd tests/python_tests/
           pytest --timeout=60 --color=yes --force-sugar .
 
       # Step 4: Upload test log as an artifact
