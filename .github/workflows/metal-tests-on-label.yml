@@ -7,7 +7,7 @@ on:
 jobs:
   test-tt-metal:
     name: "🧪 Running tests (Wormhole)"
-    needs: setup-and-test-wormhole
+    if: contains(github.event.pull_request.labels.*.name, 'run-integration-tests')
     uses: ./.github/workflows/tt-metal-integration-tests.yml
     secrets: inherit
     with:
