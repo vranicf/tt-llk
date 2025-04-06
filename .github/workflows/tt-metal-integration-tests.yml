@@ -19,11 +19,6 @@ jobs:
     runs-on: ${{ inputs.runs_on }}
     timeout-minutes: 40
     steps:
-      - name: Checkout this repository
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref }}
-
       - name: Checkout tt-metal repository with submodules
         uses: actions/checkout@v4
         with:
