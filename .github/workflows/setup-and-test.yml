@@ -30,13 +30,15 @@ jobs:
       - name: Install sfpi
         shell: bash
         run: |
-          ./tests/setup_testing_env.sh
+          cd tests
+          ./setup_testing_env.sh
+          cd ..
 
       # Step 3: Run the tests
       - name: Run tests
         shell: bash
         run: |
-          cd tests/python_tests/
+          cd python_tests/
           pytest --timeout=60 --color=yes --force-sugar .
 
       # Step 4: Upload test log as an artifact
