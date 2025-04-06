@@ -45,7 +45,7 @@ jobs:
             });
 
             const existingComment = comments.find(comment =>
-              comment.body.includes("If you wish to run tt-metal integration tests")
+              comment.body.includes("Thank you for your contribution")
             );
 
             return existingComment ? true : false;
