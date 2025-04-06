@@ -19,6 +19,8 @@ Test environment requires SFPI compiler for building, which is automatically ing
 4. Add new tests to cover your changes if needed and run existing ones.
 5. Start a pull request (PR).
 
+## Tenstorrent Bounty Program Terms and Conditions
+This repo is a part of Tenstorrent’s bounty program. If you are interested in helping to improve tt-llk, please make sure to read the [Tenstorrent Bounty Program Terms and Conditions](https://docs.tenstorrent.com/bounty_terms.html) before heading to the issues tab. Look for the issues that are tagged with both “bounty” and difficulty level!
 
 ### Note
 Old LLK repositories (https://github.com/tenstorrent/tt-llk-gs, https://github.com/tenstorrent/tt-llk-wh-b0, https://github.com/tenstorrent/tt-llk-bh) are merged here and archived.
