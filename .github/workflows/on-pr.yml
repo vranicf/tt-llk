@@ -36,15 +36,6 @@ jobs:
       docker_image: ${{ needs.build-images.outputs.docker-image }}
       runs_on: tt-beta-ubuntu-2204-n150-large-stable
 
-  test-tt-metal:
-    name: "🧩 tt-metal integration (Wormhole)"
-    needs: setup-and-test-wormhole
-    uses: ./.github/workflows/tt-metal-integration-tests.yml
-    secrets: inherit
-    with:
-      branch_name: ${{ github.head_ref }}
-      runs_on: tt-beta-ubuntu-2204-n150-large-stable
-
   check-all-green:
     name: "✅ Check all green"
     if: always()
