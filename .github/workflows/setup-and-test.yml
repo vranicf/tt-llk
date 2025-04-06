@@ -3,10 +3,6 @@ name: "⚙️ Setup and Test"
 on:
   workflow_call:
     inputs:
-      chip_arch:
-        description: "The chip architecture"
-        required: true
-        type: string
       docker_image:
         description: "The Docker image to use for the container"
         required: true
@@ -38,11 +34,8 @@ jobs:
 
       # Step 3: Run the tests
       - name: Run tests
-        env:
-          CHIP_ARCH: ${{ inputs.chip_arch }}
         shell: bash
         run: |
-          echo "CHIP_ARCH is set to $CHIP_ARCH"
           cd tests/python_tests/
           pytest --timeout=60 --color=yes --force-sugar .
 
