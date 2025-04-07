@@ -9,6 +9,10 @@ on:
         type: string
         default: "3.10"
 
+permissions:
+  pull-requests: write
+  contents: read
+
 jobs:
   pre-commit:
     name: Pre-commit checks
