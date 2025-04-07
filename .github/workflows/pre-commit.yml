@@ -9,10 +9,6 @@ on:
         type: string
         default: "3.10"
 
-permissions:
-  pull-requests: write
-  contents: read
-
 jobs:
   pre-commit:
     name: Pre-commit checks
@@ -20,8 +16,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Fetch all history so 'origin/main' is available
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -36,6 +30,7 @@ jobs:
   pr-comment:
     name: Post comment on PR
     runs-on: ubuntu-latest
+    if: github.event.pull_request.head.repo.full_name == github.repository
     steps:
       - name: Check if comment already exists
         id: check-comment
